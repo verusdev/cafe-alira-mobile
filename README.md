@@ -1,97 +1,137 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Cafe Alira Mobile
 
-# Getting Started
+Mobile CRM for cafe employees (Android). Built with React Native 0.87 + TypeScript.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Connects to the Symfony REST API backend at `C:\develop\cafe`.
 
-## Step 1: Start Metro
+## Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **Dashboard** - daily stats, quick actions
+- **Menu** - browse dishes with categories and prices
+- **Orders** - list, filter, create, view details
+- **Status management** - new -> confirmed -> preparing -> done / cancelled
+- **Payments** - cash, card, transfer with balance tracking
+- **Settings** - configure API URL and key
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | React Native 0.87 |
+| Language | TypeScript |
+| Navigation | React Navigation 7 (Bottom Tabs + Stack) |
+| UI Kit | React Native Paper (Material Design 3) |
+| State | TanStack Query 5 (server), Zustand (client) |
+| Forms | React Hook Form + Zod |
+| HTTP | Axios |
+
+## Prerequisites
+
+- Node.js 18+
+- Android Studio (with SDK 34+)
+- JDK 17+
+- Symfony backend running on `http://127.0.0.1:8000`
+
+## Getting Started
+
+### 1. Install dependencies
 
 ```sh
-# Using npm
+cd cafe-mobile
+npm install
+```
+
+### 2. Configure API connection
+
+Open the app -> Settings tab, or set defaults in `src/store/useSettingsStore.ts`:
+
+```typescript
+apiUrl: 'http://10.0.2.2:8000',  // Android emulator -> host localhost
+apiKey: 'cafe-api-2026-local',
+```
+
+> **Note**: `10.0.2.2` is the special alias for host `localhost` from Android emulator.
+> For physical device on same network, use your machine's LAN IP (e.g. `http://192.168.1.x:8000`).
+
+### 3. Start Metro bundler
+
+```sh
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### 4. Run on Android
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+In a separate terminal:
 
 ```sh
-# Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+Or from Android Studio: open `android/` folder -> Run.
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### 5. Run backend
 
 ```sh
-bundle install
+cd ../cafe
+php -S 127.0.0.1:8000 -t public
 ```
 
-Then, and every time you update your native dependencies, run:
+## Project Structure
 
-```sh
-bundle exec pod install
+```
+src/
+  api/
+    client.ts          # Axios instance, base config
+    types.ts           # TypeScript types for API entities
+    useMenu.ts         # GET /api/dishes
+    useOrders.ts       # GET /api/orders
+    useOrderCreate.ts  # POST /api/orders
+    useOrderPay.ts     # POST /api/orders/:id/pay
+    useOrderStatus.ts  # POST /api/orders/:id/status
+  components/
+    DishCard.tsx       # Menu item card
+    OrderCard.tsx      # Order list item
+    StatusBadge.tsx    # Colored status pill
+    MoneyText.tsx      # Formatted currency
+    EmptyState.tsx     # Placeholder for empty lists
+  screens/
+    DashboardScreen.tsx
+    MenuScreen.tsx
+    OrdersScreen.tsx
+    OrderDetailScreen.tsx
+    OrderCreateScreen.tsx
+    PaymentScreen.tsx
+    SettingsScreen.tsx
+  navigation/
+    AppNavigator.tsx   # Bottom tabs + stack navigation
+    types.ts          # Navigation type definitions
+  store/
+    useSettingsStore.ts  # Zustand store (API URL, key)
+  utils/
+    format.ts         # Date, money, status color helpers
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## API Endpoints Used
 
-```sh
-# Using npm
-npm run ios
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/dishes` | List all menu items |
+| GET | `/api/orders` | List all orders |
+| POST | `/api/orders` | Create a new order |
+| POST | `/api/orders/:id/pay` | Add payment to order |
+| POST | `/api/orders/:id/status` | Change order status |
 
-# OR using Yarn
-yarn ios
-```
+All requests require `X-API-Key` header.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Troubleshooting
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+**Metro can't connect to backend**
+- Ensure `php -S 127.0.0.1:8000` is running
+- Check API URL in Settings (use `10.0.2.2` for emulator)
 
-## Step 3: Modify your app
+**Build fails**
+- Run `cd android && ./gradlew clean` then try again
+- Ensure JDK 17 and Android SDK are installed
 
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+**TypeScript errors**
+- Run `npx tsc --noEmit` to check
