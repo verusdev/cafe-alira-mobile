@@ -9,8 +9,9 @@ import {formatDateTime} from '../utils/format';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {OrderStatus} from '../api/types';
+import type {OrdersStackParamList} from '../navigation/types';
 
-type Props = NativeStackScreenProps<any>;
+type Props = NativeStackScreenProps<OrdersStackParamList, 'OrderDetail'>;
 
 const STATUS_ACTIONS: {from: OrderStatus[]; to: OrderStatus; label: string}[] =
   [

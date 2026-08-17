@@ -11,9 +11,10 @@ import {OrderDetailScreen} from '../screens/OrderDetailScreen';
 import {OrderCreateScreen} from '../screens/OrderCreateScreen';
 import {PaymentScreen} from '../screens/PaymentScreen';
 import {SettingsScreen} from '../screens/SettingsScreen';
+import type {RootTabParamList, OrdersStackParamList} from './types';
 
-const Tab = createBottomTabNavigator();
-const OrdersStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator<RootTabParamList>();
+const OrdersStack = createNativeStackNavigator<OrdersStackParamList>();
 
 function OrdersStackNavigator() {
   return (

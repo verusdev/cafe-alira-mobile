@@ -5,8 +5,9 @@ import {useOrderPay} from '../api/useOrderPay';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {PaymentMethod} from '../api/types';
+import type {OrdersStackParamList} from '../navigation/types';
 
-type Props = NativeStackScreenProps<any>;
+type Props = NativeStackScreenProps<OrdersStackParamList, 'Payment'>;
 
 export function PaymentScreen({route, navigation}: Props) {
   const {orderId, balance} = route.params;

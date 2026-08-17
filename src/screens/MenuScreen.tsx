@@ -58,7 +58,7 @@ export function MenuScreen() {
         stickySectionHeadersEnabled
         contentContainerStyle={styles.list}
         refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+          <RefreshControl refreshing={isRefetching} onRefresh={() => { refetch(); }} />
         }
       />
     </SafeAreaView>

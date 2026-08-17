@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Platform} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {PaperProvider, MD3LightTheme} from 'react-native-paper';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
@@ -35,7 +35,11 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <PaperProvider theme={theme}>
         <SafeAreaProvider>
-          <StatusBar barStyle="light-content" backgroundColor="#6200EE" />
+          <StatusBar barStyle="light-content" />
+          {Platform.OS === 'android' && (
+            // @ts-ignore -- backgroundColor доступен только на Android
+            <StatusBar backgroundColor="#6200EE" />
+          )}
           <AppNavigator />
         </SafeAreaProvider>
       </PaperProvider>
